@@ -33,7 +33,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 #define LOG_CONTEXT_ALL INT_MAX
 
@@ -57,11 +57,11 @@
 #endif
 #pragma clang diagnostic pop
 
-@interface DDTTYLogger : DDAbstractLogger <DDLogger>
+@interface SVTTYLogger : SVAbstractLogger <SVLogger>
 
 + (instancetype)sharedInstance;
 
-/* Inherited from the DDLogger protocol:
+/* Inherited from the SVLogger protocol:
  *
  * Formatters may optionally be added to any logger.
  *
@@ -71,10 +71,10 @@
  * More information about formatters can be found here:
  * Documentation/CustomFormatters.md
  *
- * The actual implementation of these methods is inherited from DDAbstractLogger.
+ * The actual implementation of these methods is inherited from SVAbstractLogger.
 
-   - (id <DDLogFormatter>)logFormatter;
-   - (void)setLogFormatter:(id <DDLogFormatter>)formatter;
+   - (id <SVLogFormatter>)logFormatter;
+   - (void)setLogFormatter:(id <SVLogFormatter>)formatter;
 
  */
 
@@ -104,26 +104,26 @@
 /**
  * The default color set (foregroundColor, backgroundColor) is:
  *
- * - DDLogFlagError   = (red, nil)
- * - DDLogFlagWarning = (orange, nil)
+ * - SVLogFlagError   = (red, nil)
+ * - SVLogFlagWarning = (orange, nil)
  *
  * You can customize the colors however you see fit.
  * Please note that you are passing a flag, NOT a level.
  *
- * GOOD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:DDLogFlagInfo];  // <- Good :)
- *  BAD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:DDLogLevelInfo]; // <- BAD! :(
+ * GOOD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:SVLogFlagInfo];  // <- Good :)
+ *  BAD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:SVLogLevelInfo]; // <- BAD! :(
  *
- * DDLogFlagInfo  = 0...00100
- * DDLogLevelInfo = 0...00111 <- Would match DDLogFlagInfo and DDLogFlagWarning and DDLogFlagError
+ * SVLogFlagInfo  = 0...00100
+ * SVLogLevelInfo = 0...00111 <- Would match SVLogFlagInfo and SVLogFlagWarning and SVLogFlagError
  *
  * If you run the application within Xcode, then the XcodeColors plugin is required.
  *
- * If you run the application from a shell, then DDTTYLogger will automatically map the given color to
+ * If you run the application from a shell, then SVTTYLogger will automatically map the given color to
  * the closest available color. (xterm-256color or xterm-color which have 256 and 16 supported colors respectively.)
  *
  * This method invokes setForegroundColor:backgroundColor:forFlag:context: and applies it to `LOG_CONTEXT_ALL`.
  **/
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask;
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(SVLogFlag)mask;
 
 /**
  * Just like setForegroundColor:backgroundColor:flag, but allows you to specify a particular logging context.
@@ -136,15 +136,15 @@
  * Logging context's are explained in further detail here:
  * Documentation/CustomContext.md
  **/
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask context:(NSInteger)ctxt;
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(SVLogFlag)mask context:(NSInteger)ctxt;
 
 /**
- * Similar to the methods above, but allows you to map DDLogMessage->tag to a particular color profile.
+ * Similar to the methods above, but allows you to map SVLogMessage->tag to a particular color profile.
  * For example, you could do something like this:
  *
  * static NSString *const PurpleTag = @"PurpleTag";
  *
- * #define DDLogPurple(frmt, ...) LOG_OBJC_TAG_MACRO(NO, 0, 0, 0, PurpleTag, frmt, ##__VA_ARGS__)
+ * #define SVLogPurple(frmt, ...) LOG_OBJC_TAG_MACRO(NO, 0, 0, 0, PurpleTag, frmt, ##__VA_ARGS__)
  * 
  * And then where you configure CocoaLumberjack:
  *
@@ -154,20 +154,20 @@
  *
  * Note: For CLI OS X projects that don't link with AppKit use CLIColor objects instead
  *
- * [[DDTTYLogger sharedInstance] setForegroundColor:purple backgroundColor:nil forTag:PurpleTag];
- * [DDLog addLogger:[DDTTYLogger sharedInstance]];
+ * [[SVTTYLogger sharedInstance] setForegroundColor:purple backgroundColor:nil forTag:PurpleTag];
+ * [SVLog aSVLogger:[SVTTYLogger sharedInstance]];
  *
  * This would essentially give you a straight NSLog replacement that prints in purple:
  *
- * DDLogPurple(@"I'm a purple log message!");
+ * SVLogPurple(@"I'm a purple log message!");
  **/
 - (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forTag:(id <NSCopying>)tag;
 
 /**
  * Clearing color profiles.
  **/
-- (void)clearColorsForFlag:(DDLogFlag)mask;
-- (void)clearColorsForFlag:(DDLogFlag)mask context:(NSInteger)context;
+- (void)clearColorsForFlag:(SVLogFlag)mask;
+- (void)clearColorsForFlag:(SVLogFlag)mask context:(NSInteger)context;
 - (void)clearColorsForTag:(id <NSCopying>)tag;
 - (void)clearColorsForAllFlags;
 - (void)clearColorsForAllTags;

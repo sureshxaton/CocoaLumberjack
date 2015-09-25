@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "CocoaLumberjack.h"
 
-static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+static const SVLogLevel ddLogLevel = SVLogLevelVerbose;
 
 @interface AppDelegate ()
 
@@ -20,12 +20,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    [SVLog addLogger:[SVTTYLogger sharedInstance]];
     
-    DDLogVerbose(@"Verbose");
-    DDLogInfo(@"Info");
-    DDLogWarn(@"Warn");
-    DDLogError(@"Error");
+    SVLogVerbose(@"Verbose");
+    SVLogInfo(@"Info");
+    SVLogWarn(@"Warn");
+    SVLogError(@"Error");
     return YES;
 }
 

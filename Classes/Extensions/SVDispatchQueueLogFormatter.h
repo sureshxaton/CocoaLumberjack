@@ -21,7 +21,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 
 /**
@@ -31,7 +31,7 @@
  * You can learn more about log formatters here:
  * Documentation/CustomFormatters.md
  *
- * A typical NSLog (or DDTTYLogger) prints detailed info as [<process_id>:<thread_id>].
+ * A typical NSLog (or SVTTYLogger) prints detailed info as [<process_id>:<thread_id>].
  * For example:
  *
  * 2011-10-17 20:21:45.435 AppName[19928:5207] Your log message here
@@ -61,7 +61,7 @@
  * Note: If manually creating your own background threads (via NSThread/alloc/init or NSThread/detachNeThread),
  * you can use [[NSThread currentThread] setName:(NSString *)].
  **/
-@interface DDDispatchQueueLogFormatter : NSObject <DDLogFormatter>
+@interface SVDispatchQueueLogFormatter : NSObject <SVLogFormatter>
 
 /**
  * Standard init method.
@@ -124,12 +124,12 @@
 @end
 
 /**
- * Method declarations that make it easier to extend/modify DDDispatchQueueLogFormatter
+ * Method declarations that make it easier to extend/modify SVDispatchQueueLogFormatter
  **/
-@interface DDDispatchQueueLogFormatter (OverridableMethods)
+@interface SVDispatchQueueLogFormatter (OverridableMethods)
 
 - (NSString *)stringFromDate:(NSDate *)date;
-- (NSString *)queueThreadLabelForLogMessage:(DDLogMessage *)logMessage;
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage;
+- (NSString *)queueThreadLabelForLogMessage:(SVLogMessage *)logMessage;
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage;
 
 @end

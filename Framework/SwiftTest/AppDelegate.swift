@@ -10,37 +10,37 @@ import Cocoa
 import CocoaLumberjack
 import CocoaLumberjackSwift
 
-let ourLogLevel = DDLogLevel.Verbose
+let ourLogLevel = SVLogLevel.Verbose
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBOutlet weak var window: NSWindow!
     
 	func applicationDidFinishLaunching(aNotification: NSNotification) {
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
+        SVLog.addLogger(SVTTYLogger.sharedInstance())
 		
         defaultDebugLevel = .Warning
 
-        DDLogVerbose("Verbose");
-        DDLogInfo("Info");
-        DDLogWarn("Warn");
-        DDLogError("Error");
+        SVLogVerbose("Verbose");
+        SVLogInfo("Info");
+        SVLogWarn("Warn");
+        SVLogError("Error");
         
         defaultDebugLevel = ourLogLevel
         
-        DDLogVerbose("Verbose");
-        DDLogInfo("Info");
-        DDLogWarn("Warn");
-        DDLogError("Error");
+        SVLogVerbose("Verbose");
+        SVLogInfo("Info");
+        SVLogWarn("Warn");
+        SVLogError("Error");
         
         defaultDebugLevel = .Off
         
-        DDLogVerbose("Verbose", level: ourLogLevel);
-        DDLogInfo("Info", level: ourLogLevel);
-        DDLogWarn("Warn", level: ourLogLevel);
-        DDLogError("Error", level: ourLogLevel);
+        SVLogVerbose("Verbose", level: ourLogLevel);
+        SVLogInfo("Info", level: ourLogLevel);
+        SVLogWarn("Warn", level: ourLogLevel);
+        SVLogError("Error", level: ourLogLevel);
         
-        DDLogError("Error \(5)", level: ourLogLevel);
+        SVLogError("Error \(5)", level: ourLogLevel);
     }
 
 	func applicationWillTerminate(aNotification: NSNotification) {

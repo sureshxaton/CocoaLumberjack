@@ -13,7 +13,7 @@
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
 
-#import "DDDispatchQueueLogFormatter.h"
+#import "SVDispatchQueueLogFormatter.h"
 #import <libkern/OSAtomic.h>
 
 
@@ -21,7 +21,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface DDDispatchQueueLogFormatter () {
+@interface SVDispatchQueueLogFormatter () {
     NSString *_dateFormatString;
     
     int32_t _atomicLoggerCount;
@@ -37,7 +37,7 @@
 @end
 
 
-@implementation DDDispatchQueueLogFormatter
+@implementation SVDispatchQueueLogFormatter
 
 - (instancetype)init {
     if ((self = [super init])) {
@@ -90,7 +90,7 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark DDLogFormatter
+#pragma mark SVLogFormatter
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (NSString *)stringFromDate:(NSDate *)date {
@@ -137,8 +137,8 @@
     }
 }
 
-- (NSString *)queueThreadLabelForLogMessage:(DDLogMessage *)logMessage {
-    // As per the DDLogFormatter contract, this method is always invoked on the same thread/dispatch_queue
+- (NSString *)queueThreadLabelForLogMessage:(SVLogMessage *)logMessage {
+    // As per the SVLogFormatter contract, this method is always invoked on the same thread/dispatch_queue
 
     NSUInteger minQueueLength = self.minQueueLength;
     NSUInteger maxQueueLength = self.maxQueueLength;
@@ -229,18 +229,18 @@
     }
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     NSString *timestamp = [self stringFromDate:(logMessage->_timestamp)];
     NSString *queueThreadLabel = [self queueThreadLabelForLogMessage:logMessage];
 
     return [NSString stringWithFormat:@"%@ [%@] %@", timestamp, queueThreadLabel, logMessage->_message];
 }
 
-- (void)didAddToLogger:(id <DDLogger>  __attribute__((unused)))logger {
+- (void)didAddToLogger:(id <SVLogger>  __attribute__((unused)))logger {
     OSAtomicIncrement32(&_atomicLoggerCount);
 }
 
-- (void)willRemoveFromLogger:(id <DDLogger> __attribute__((unused)))logger {
+- (void)willRemoveFromLogger:(id <SVLogger> __attribute__((unused)))logger {
     OSAtomicDecrement32(&_atomicLoggerCount);
 }
 

@@ -18,7 +18,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 #import <pthread.h>
 #import <objc/runtime.h>
@@ -35,7 +35,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-// We probably shouldn't be using DDLog() statements within the DDLog implementation.
+// We probably shouldn't be using SVLog() statements within the SVLog implementation.
 // But we still want to leave our log statements for any future debugging,
 // and to allow other developers to trace the implementation (which is a great learning tool).
 //
@@ -61,7 +61,7 @@
 
 #define LOG_MAX_QUEUE_SIZE 1000 // Should not exceed INT32_MAX
 
-// The "global logging queue" refers to [DDLog loggingQueue].
+// The "global logging queue" refers to [SVLog loggingQueue].
 // It is the queue that all log statements go through.
 //
 // The logging queue sets a flag via dispatch_queue_set_specific using this key.
@@ -69,22 +69,22 @@
 
 static void *const GlobalLoggingQueueIdentityKey = (void *)&GlobalLoggingQueueIdentityKey;
 
-@interface DDLoggerNode : NSObject
+@interface SVLoggerNode : NSObject
 {
     // Direct accessors to be used only for performance
     @public
-    id <DDLogger> _logger;
-    DDLogLevel _level;
+    id <SVLogger> _logger;
+    SVLogLevel _level;
     dispatch_queue_t _loggerQueue;
 }
 
-@property (nonatomic, readonly) id <DDLogger> logger;
-@property (nonatomic, readonly) DDLogLevel level;
+@property (nonatomic, readonly) id <SVLogger> logger;
+@property (nonatomic, readonly) SVLogLevel level;
 @property (nonatomic, readonly) dispatch_queue_t loggerQueue;
 
-+ (DDLoggerNode *)nodeWithLogger:(id <DDLogger>)logger
++ (SVLoggerNode *)nodeWithLogger:(id <SVLogger>)logger
                      loggerQueue:(dispatch_queue_t)loggerQueue
-                           level:(DDLogLevel)level;
+                           level:(SVLogLevel)level;
 
 @end
 
@@ -93,7 +93,7 @@ static void *const GlobalLoggingQueueIdentityKey = (void *)&GlobalLoggingQueueId
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation DDLog
+@implementation SVLog
 
 // An array used to manage all the individual loggers.
 // The array is only modified on the loggingQueue/loggingThread.
@@ -122,12 +122,12 @@ static NSUInteger _numProcessors;
  * This method may also be called directly (assumably by accident), hence the safety mechanism.
  **/
 + (void)initialize {
-    static dispatch_once_t DDLogOnceToken;
+    static dispatch_once_t SVLogOnceToken;
 
-    dispatch_once(&DDLogOnceToken, ^{
+    dispatch_once(&SVLogOnceToken, ^{
         _loggers = [[NSMutableArray alloc] initWithCapacity:4];
 
-        NSLogDebug(@"DDLog: Using grand central dispatch");
+        NSLogDebug(@"SVLog: Using grand central dispatch");
 
         _loggingQueue = dispatch_queue_create("cocoa.lumberjack", NULL);
         _loggingGroup = dispatch_group_create();
@@ -149,7 +149,7 @@ static NSUInteger _numProcessors;
         }
         _numProcessors = MAX(result, one);
 
-        NSLogDebug(@"DDLog: numProcessors = %@", @(_numProcessors));
+        NSLogDebug(@"SVLog: numProcessors = %@", @(_numProcessors));
 
 
 #if TARGET_OS_IPHONE
@@ -204,11 +204,11 @@ static NSUInteger _numProcessors;
 #pragma mark Logger Management
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (void)addLogger:(id <DDLogger>)logger {
-    [self addLogger:logger withLevel:DDLogLevelAll]; // DDLogLevelAll has all bits set
++ (void)addLogger:(id <SVLogger>)logger {
+    [self addLogger:logger withLevel:SVLogLevelAll]; // SVLogLevelAll has all bits set
 }
 
-+ (void)addLogger:(id <DDLogger>)logger withLevel:(DDLogLevel)level {
++ (void)addLogger:(id <SVLogger>)logger withLevel:(SVLogLevel)level {
     if (!logger) {
         return;
     }
@@ -218,7 +218,7 @@ static NSUInteger _numProcessors;
                                     } });
 }
 
-+ (void)removeLogger:(id <DDLogger>)logger {
++ (void)removeLogger:(id <SVLogger>)logger {
     if (!logger) {
         return;
     }
@@ -248,7 +248,7 @@ static NSUInteger _numProcessors;
 #pragma mark - Master Logging
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (void)queueLogMessage:(DDLogMessage *)logMessage asynchronously:(BOOL)asyncFlag {
++ (void)queueLogMessage:(SVLogMessage *)logMessage asynchronously:(BOOL)asyncFlag {
     // We have a tricky situation here...
     //
     // In the common case, when the queueSize is below the maximumQueueSize,
@@ -306,8 +306,8 @@ static NSUInteger _numProcessors;
 }
 
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(SVLogLevel)level
+       flag:(SVLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -335,8 +335,8 @@ static NSUInteger _numProcessors;
 }
 
 + (void)log:(BOOL)asynchronous
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(SVLogLevel)level
+       flag:(SVLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
@@ -361,15 +361,15 @@ static NSUInteger _numProcessors;
 
 + (void)log:(BOOL)asynchronous
     message:(NSString *)message
-      level:(DDLogLevel)level
-       flag:(DDLogFlag)flag
+      level:(SVLogLevel)level
+       flag:(SVLogFlag)flag
     context:(NSInteger)context
        file:(const char *)file
    function:(const char *)function
        line:(NSUInteger)line
         tag:(id)tag {
     
-    DDLogMessage *logMessage = [[DDLogMessage alloc] initWithMessage:message
+    SVLogMessage *logMessage = [[SVLogMessage alloc] initWithMessage:message
                                                                level:level
                                                                 flag:flag
                                                              context:context
@@ -377,14 +377,14 @@ static NSUInteger _numProcessors;
                                                             function:[NSString stringWithFormat:@"%s", function]
                                                                 line:line
                                                                  tag:tag
-                                                             options:(DDLogMessageOptions)0
+                                                             options:(SVLogMessageOptions)0
                                                            timestamp:nil];
     
     [self queueLogMessage:logMessage asynchronously:asynchronous];
 }
 
 + (void)log:(BOOL)asynchronous
-    message:(DDLogMessage *)logMessage {
+    message:(SVLogMessage *)logMessage {
     [self queueLogMessage:logMessage asynchronously:asynchronous];
 }
 
@@ -445,7 +445,7 @@ static NSUInteger _numProcessors;
 
     // Issue #24 (GitHub) - Crashing in in ARC+Simulator
     //
-    // The method +[DDLog isRegisteredClass] will crash a project when using it with ARC + Simulator.
+    // The method +[SVLog isRegisteredClass] will crash a project when using it with ARC + Simulator.
     // For running in the Simulator, it needs to execute the non-iOS code.
 
     Method getter = class_getClassMethod(class, getterSel);
@@ -499,7 +499,7 @@ static NSUInteger _numProcessors;
         }
     }
 
-    // We can now loop through the classes, and test each one to see if it is a DDLogging class.
+    // We can now loop through the classes, and test each one to see if it is a SVLogging class.
 
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:numClasses];
 
@@ -526,26 +526,26 @@ static NSUInteger _numProcessors;
     return result;
 }
 
-+ (DDLogLevel)levelForClass:(Class)aClass {
++ (SVLogLevel)levelForClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
         return [aClass ddLogLevel];
     }
-    return (DDLogLevel)-1;
+    return (SVLogLevel)-1;
 }
 
-+ (DDLogLevel)levelForClassWithName:(NSString *)aClassName {
++ (SVLogLevel)levelForClassWithName:(NSString *)aClassName {
     Class aClass = NSClassFromString(aClassName);
 
     return [self levelForClass:aClass];
 }
 
-+ (void)setLevel:(DDLogLevel)level forClass:(Class)aClass {
++ (void)setLevel:(SVLogLevel)level forClass:(Class)aClass {
     if ([self isRegisteredClass:aClass]) {
         [aClass ddSetLogLevel:level];
     }
 }
 
-+ (void)setLevel:(DDLogLevel)level forClassWithName:(NSString *)aClassName {
++ (void)setLevel:(SVLogLevel)level forClassWithName:(NSString *)aClassName {
     Class aClass = NSClassFromString(aClassName);
     [self setLevel:level forClass:aClass];
 }
@@ -554,7 +554,7 @@ static NSUInteger _numProcessors;
 #pragma mark Logging Thread
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (void)lt_addLogger:(id <DDLogger>)logger level:(DDLogLevel)level {
++ (void)lt_addLogger:(id <SVLogger>)logger level:(SVLogLevel)level {
     // Add to loggers array.
     // Need to create loggerQueue if loggerNode doesn't provide one.
 
@@ -582,7 +582,7 @@ static NSUInteger _numProcessors;
         loggerQueue = dispatch_queue_create(loggerQueueName, NULL);
     }
 
-    DDLoggerNode *loggerNode = [DDLoggerNode nodeWithLogger:logger loggerQueue:loggerQueue level:level];
+    SVLoggerNode *loggerNode = [SVLoggerNode nodeWithLogger:logger loggerQueue:loggerQueue level:level];
     [_loggers addObject:loggerNode];
 
     if ([logger respondsToSelector:@selector(didAddLogger)]) {
@@ -592,15 +592,15 @@ static NSUInteger _numProcessors;
     }
 }
 
-+ (void)lt_removeLogger:(id <DDLogger>)logger {
++ (void)lt_removeLogger:(id <SVLogger>)logger {
     // Find associated loggerNode in list of added loggers
 
     NSAssert(dispatch_get_specific(GlobalLoggingQueueIdentityKey),
              @"This method should only be run on the logging thread/queue");
 
-    DDLoggerNode *loggerNode = nil;
+    SVLoggerNode *loggerNode = nil;
 
-    for (DDLoggerNode *node in _loggers) {
+    for (SVLoggerNode *node in _loggers) {
         if (node->_logger == logger) {
             loggerNode = node;
             break;
@@ -608,7 +608,7 @@ static NSUInteger _numProcessors;
     }
     
     if (loggerNode == nil) {
-        NSLogDebug(@"DDLog: Request to remove logger which wasn't added");
+        NSLogDebug(@"SVLog: Request to remove logger which wasn't added");
         return;
     }
     
@@ -628,7 +628,7 @@ static NSUInteger _numProcessors;
              @"This method should only be run on the logging thread/queue");
     
     // Notify all loggers
-    for (DDLoggerNode *loggerNode in _loggers) {
+    for (SVLoggerNode *loggerNode in _loggers) {
         if ([loggerNode->_logger respondsToSelector:@selector(willRemoveLogger)]) {
             dispatch_async(loggerNode->_loggerQueue, ^{ @autoreleasepool {
                 [loggerNode->_logger willRemoveLogger];
@@ -647,14 +647,14 @@ static NSUInteger _numProcessors;
 
     NSMutableArray *theLoggers = [NSMutableArray new];
 
-    for (DDLoggerNode *loggerNode in _loggers) {
+    for (SVLoggerNode *loggerNode in _loggers) {
         [theLoggers addObject:loggerNode->_logger];
     }
 
     return [theLoggers copy];
 }
 
-+ (void)lt_log:(DDLogMessage *)logMessage {
++ (void)lt_log:(SVLogMessage *)logMessage {
     // Execute the given log message on each of our loggers.
 
     NSAssert(dispatch_get_specific(GlobalLoggingQueueIdentityKey),
@@ -668,7 +668,7 @@ static NSUInteger _numProcessors;
         // The waiting ensures that a slow logger doesn't end up with a large queue of pending log messages.
         // This would defeat the purpose of the efforts we made earlier to restrict the max queue size.
 
-        for (DDLoggerNode *loggerNode in _loggers) {
+        for (SVLoggerNode *loggerNode in _loggers) {
             // skip the loggers that shouldn't write this message based on the log level
 
             if (!(logMessage->_flag & loggerNode->_level)) {
@@ -684,7 +684,7 @@ static NSUInteger _numProcessors;
     } else {
         // Execute each logger serialy, each within its own queue.
         
-        for (DDLoggerNode *loggerNode in _loggers) {
+        for (SVLoggerNode *loggerNode in _loggers) {
             // skip the loggers that shouldn't write this message based on the log level
 
             if (!(logMessage->_flag & loggerNode->_level)) {
@@ -723,7 +723,7 @@ static NSUInteger _numProcessors;
     NSAssert(dispatch_get_specific(GlobalLoggingQueueIdentityKey),
              @"This method should only be run on the logging thread/queue");
     
-    for (DDLoggerNode *loggerNode in _loggers) {
+    for (SVLoggerNode *loggerNode in _loggers) {
         if ([loggerNode->_logger respondsToSelector:@selector(flush)]) {
             dispatch_group_async(_loggingGroup, loggerNode->_loggerQueue, ^{ @autoreleasepool {
                 [loggerNode->_logger flush];
@@ -738,7 +738,7 @@ static NSUInteger _numProcessors;
 #pragma mark Utilities
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
+NSString * SVExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     if (filePath == NULL) {
         return nil;
     }
@@ -805,9 +805,9 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation DDLoggerNode
+@implementation SVLoggerNode
 
-- (instancetype)initWithLogger:(id <DDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(DDLogLevel)level {
+- (instancetype)initWithLogger:(id <SVLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(SVLogLevel)level {
     if ((self = [super init])) {
         _logger = logger;
 
@@ -823,8 +823,8 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     return self;
 }
 
-+ (DDLoggerNode *)nodeWithLogger:(id <DDLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(DDLogLevel)level {
-    return [[DDLoggerNode alloc] initWithLogger:logger loggerQueue:loggerQueue level:level];
++ (SVLoggerNode *)nodeWithLogger:(id <SVLogger>)logger loggerQueue:(dispatch_queue_t)loggerQueue level:(SVLogLevel)level {
+    return [[SVLoggerNode alloc] initWithLogger:logger loggerQueue:loggerQueue level:level];
 }
 
 - (void)dealloc {
@@ -841,7 +841,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation DDLogMessage
+@implementation SVLogMessage
 
 // Can we use DISPATCH_CURRENT_QUEUE_LABEL ?
 // Can we use dispatch_get_current_queue (without it crashing) ?
@@ -909,14 +909,14 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 #endif /* if TARGET_OS_IPHONE */
 
 - (instancetype)initWithMessage:(NSString *)message
-                          level:(DDLogLevel)level
-                           flag:(DDLogFlag)flag
+                          level:(SVLogLevel)level
+                           flag:(SVLogFlag)flag
                         context:(NSInteger)context
                            file:(NSString *)file
                        function:(NSString *)function
                            line:(NSUInteger)line
                             tag:(id)tag
-                        options:(DDLogMessageOptions)options
+                        options:(SVLogMessageOptions)options
                       timestamp:(NSDate *)timestamp {
     if ((self = [super init])) {
         _message      = [message copy];
@@ -924,10 +924,10 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
         _flag         = flag;
         _context      = context;
 
-        BOOL copyFile = (options & DDLogMessageCopyFile) == DDLogMessageCopyFile;
+        BOOL copyFile = (options & SVLogMessageCopyFile) == SVLogMessageCopyFile;
         _file = copyFile ? [file copy] : file;
 
-        BOOL copyFunction = (options & DDLogMessageCopyFunction) == DDLogMessageCopyFunction;
+        BOOL copyFunction = (options & SVLogMessageCopyFunction) == SVLogMessageCopyFunction;
         _function = copyFunction ? [function copy] : function;
 
         _line         = line;
@@ -969,7 +969,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 }
 
 - (id)copyWithZone:(NSZone * __attribute__((unused)))zone {
-    DDLogMessage *newMessage = [DDLogMessage new];
+    SVLogMessage *newMessage = [SVLogMessage new];
     
     newMessage->_message = _message;
     newMessage->_level = _level;
@@ -996,7 +996,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation DDAbstractLogger
+@implementation SVAbstractLogger
 
 - (instancetype)init {
     if ((self = [super init])) {
@@ -1041,11 +1041,11 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     #endif
 }
 
-- (void)logMessage:(DDLogMessage * __attribute__((unused)))logMessage {
+- (void)logMessage:(SVLogMessage * __attribute__((unused)))logMessage {
     // Override me
 }
 
-- (id <DDLogFormatter>)logFormatter {
+- (id <SVLogFormatter>)logFormatter {
     // This method must be thread safe and intuitive.
     // Therefore if somebody executes the following code:
     //
@@ -1069,10 +1069,10 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     //
     // Furthermore, consider the following code:
     //
-    // DDLogVerbose(@"log msg 1");
-    // DDLogVerbose(@"log msg 2");
+    // SVLogVerbose(@"log msg 1");
+    // SVLogVerbose(@"log msg 2");
     // [logger setFormatter:myFormatter];
-    // DDLogVerbose(@"log msg 3");
+    // SVLogVerbose(@"log msg 3");
     //
     // Our intuitive requirement means that the new formatter will only apply to the 3rd log message.
     // This must remain true even when using asynchronous logging.
@@ -1088,7 +1088,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
 
     // IMPORTANT NOTE:
     //
-    // Methods within the DDLogger implementation MUST access the formatter ivar directly.
+    // Methods within the SVLogger implementation MUST access the formatter ivar directly.
     // This method is designed explicitly for external access.
     //
     // Using "self." syntax to go through this method will cause immediate deadlock.
@@ -1098,9 +1098,9 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
-    __block id <DDLogFormatter> result;
+    __block id <SVLogFormatter> result;
 
     dispatch_sync(globalLoggingQueue, ^{
         dispatch_sync(_loggerQueue, ^{
@@ -1111,7 +1111,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
     return result;
 }
 
-- (void)setLogFormatter:(id <DDLogFormatter>)logFormatter {
+- (void)setLogFormatter:(id <SVLogFormatter>)logFormatter {
     // The design of this method is documented extensively in the logFormatter message (above in code).
 
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
@@ -1133,7 +1133,7 @@ NSString * DDExtractFileNameWithoutExtension(const char *filePath, BOOL copy) {
         }
     };
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     dispatch_async(globalLoggingQueue, ^{
         dispatch_async(_loggerQueue, block);

@@ -13,30 +13,20 @@
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
 
-#import <Foundation/Foundation.h>
+#import "SVASLLogger.h"
 
-// Disable legacy macros
-#ifndef DD_LEGACY_MACROS
-    #define DD_LEGACY_MACROS 0
-#endif
-
-#import "DDLog.h"
+@protocol SVLogger;
 
 /**
- * This formatter can be used to chain different formatters together.
- * The log message will processed in the order of the formatters added.
- **/
-
-@interface DDMultiFormatter : NSObject <DDLogFormatter>
-
-/**
- *  Array of chained formatters
+ *  This class provides the ability to capture the ASL (Apple System Logs)
  */
-@property (readonly) NSArray *formatters;
+@interface SVASLLogCapture : NSObject
 
-- (void)addFormatter:(id<DDLogFormatter>)formatter;
-- (void)removeFormatter:(id<DDLogFormatter>)formatter;
-- (void)removeAllFormatters;
-- (BOOL)isFormattingWithFormatter:(id<DDLogFormatter>)formatter;
++ (void)start;
++ (void)stop;
+
+// Default log level: SVLogLevelVerbose (i.e. capture all ASL messages).
++ (SVLogLevel)captureLevel;
++ (void)setCaptureLevel:(SVLogLevel)level;
 
 @end

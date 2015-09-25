@@ -13,14 +13,14 @@
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
 
-#import "DDContextFilterLogFormatter.h"
+#import "SVContextFilterLogFormatter.h"
 #import <libkern/OSAtomic.h>
 
 #if !__has_feature(objc_arc)
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface DDLoggingContextSet : NSObject
+@interface SVLoggingContextSet : NSObject
 
 - (void)addToSet:(NSUInteger)loggingContext;
 - (void)removeFromSet:(NSUInteger)loggingContext;
@@ -35,18 +35,18 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DDContextWhitelistFilterLogFormatter () {
-    DDLoggingContextSet *_contextSet;
+@interface SVContextWhitelistFilterLogFormatter () {
+    SVLoggingContextSet *_contextSet;
 }
 
 @end
 
 
-@implementation DDContextWhitelistFilterLogFormatter
+@implementation SVContextWhitelistFilterLogFormatter
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _contextSet = [[DDLoggingContextSet alloc] init];
+        _contextSet = [[SVLoggingContextSet alloc] init];
     }
 
     return self;
@@ -68,7 +68,7 @@
     return [_contextSet isInSet:loggingContext];
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     if ([self isOnWhitelist:logMessage->_context]) {
         return logMessage->_message;
     } else {
@@ -82,18 +82,18 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DDContextBlacklistFilterLogFormatter () {
-    DDLoggingContextSet *_contextSet;
+@interface SVContextBlacklistFilterLogFormatter () {
+    SVLoggingContextSet *_contextSet;
 }
 
 @end
 
 
-@implementation DDContextBlacklistFilterLogFormatter
+@implementation SVContextBlacklistFilterLogFormatter
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _contextSet = [[DDLoggingContextSet alloc] init];
+        _contextSet = [[SVLoggingContextSet alloc] init];
     }
 
     return self;
@@ -115,7 +115,7 @@
     return [_contextSet isInSet:loggingContext];
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     if ([self isOnBlacklist:logMessage->_context]) {
         return nil;
     } else {
@@ -130,7 +130,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-@interface DDLoggingContextSet () {
+@interface SVLoggingContextSet () {
     OSSpinLock _lock;
     NSMutableSet *_set;
 }
@@ -138,7 +138,7 @@
 @end
 
 
-@implementation DDLoggingContextSet
+@implementation SVLoggingContextSet
 
 - (instancetype)init {
     if ((self = [super init])) {

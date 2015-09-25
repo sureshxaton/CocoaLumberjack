@@ -13,7 +13,7 @@
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
 
-#import "DDAbstractDatabaseLogger.h"
+#import "SVAbstractDatabaseLogger.h"
 #import <math.h>
 
 
@@ -21,7 +21,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface DDAbstractDatabaseLogger ()
+@interface SVAbstractDatabaseLogger ()
 
 - (void)destroySaveTimer;
 - (void)destroyDeleteTimer;
@@ -30,7 +30,7 @@
 
 #pragma mark -
 
-@implementation DDAbstractDatabaseLogger
+@implementation SVAbstractDatabaseLogger
 
 - (instancetype)init {
     if ((self = [super init])) {
@@ -52,7 +52,7 @@
 #pragma mark Override Me
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)db_log:(DDLogMessage *)logMessage {
+- (BOOL)db_log:(SVLogMessage *)logMessage {
     // Override me and add your implementation.
     //
     // Return YES if an item was added to the buffer.
@@ -198,8 +198,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (NSUInteger)saveThreshold {
-    // The design of this method is taken from the DDAbstractLogger implementation.
-    // For extensive documentation please refer to the DDAbstractLogger implementation.
+    // The design of this method is taken from the SVAbstractLogger implementation.
+    // For extensive documentation please refer to the SVAbstractLogger implementation.
 
     // Note: The internal implementation MUST access the colorsEnabled variable directly,
     // This method is designed explicitly for external access.
@@ -211,7 +211,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSUInteger result;
 
@@ -242,13 +242,13 @@
         }
     };
 
-    // The design of the setter logic below is taken from the DDAbstractLogger implementation.
-    // For documentation please refer to the DDAbstractLogger implementation.
+    // The design of the setter logic below is taken from the SVAbstractLogger implementation.
+    // For documentation please refer to the SVAbstractLogger implementation.
 
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -258,8 +258,8 @@
 }
 
 - (NSTimeInterval)saveInterval {
-    // The design of this method is taken from the DDAbstractLogger implementation.
-    // For extensive documentation please refer to the DDAbstractLogger implementation.
+    // The design of this method is taken from the SVAbstractLogger implementation.
+    // For extensive documentation please refer to the SVAbstractLogger implementation.
 
     // Note: The internal implementation MUST access the colorsEnabled variable directly,
     // This method is designed explicitly for external access.
@@ -271,7 +271,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -333,13 +333,13 @@
         }
     };
 
-    // The design of the setter logic below is taken from the DDAbstractLogger implementation.
-    // For documentation please refer to the DDAbstractLogger implementation.
+    // The design of the setter logic below is taken from the SVAbstractLogger implementation.
+    // For documentation please refer to the SVAbstractLogger implementation.
 
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -349,8 +349,8 @@
 }
 
 - (NSTimeInterval)maxAge {
-    // The design of this method is taken from the DDAbstractLogger implementation.
-    // For extensive documentation please refer to the DDAbstractLogger implementation.
+    // The design of this method is taken from the SVAbstractLogger implementation.
+    // For extensive documentation please refer to the SVAbstractLogger implementation.
 
     // Note: The internal implementation MUST access the colorsEnabled variable directly,
     // This method is designed explicitly for external access.
@@ -362,7 +362,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -430,13 +430,13 @@
         }
     };
 
-    // The design of the setter logic below is taken from the DDAbstractLogger implementation.
-    // For documentation please refer to the DDAbstractLogger implementation.
+    // The design of the setter logic below is taken from the SVAbstractLogger implementation.
+    // For documentation please refer to the SVAbstractLogger implementation.
 
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -446,8 +446,8 @@
 }
 
 - (NSTimeInterval)deleteInterval {
-    // The design of this method is taken from the DDAbstractLogger implementation.
-    // For extensive documentation please refer to the DDAbstractLogger implementation.
+    // The design of this method is taken from the SVAbstractLogger implementation.
+    // For extensive documentation please refer to the SVAbstractLogger implementation.
 
     // Note: The internal implementation MUST access the colorsEnabled variable directly,
     // This method is designed explicitly for external access.
@@ -459,7 +459,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -520,13 +520,13 @@
         }
     };
 
-    // The design of the setter logic below is taken from the DDAbstractLogger implementation.
-    // For documentation please refer to the DDAbstractLogger implementation.
+    // The design of the setter logic below is taken from the SVAbstractLogger implementation.
+    // For documentation please refer to the SVAbstractLogger implementation.
 
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -536,8 +536,8 @@
 }
 
 - (BOOL)deleteOnEverySave {
-    // The design of this method is taken from the DDAbstractLogger implementation.
-    // For extensive documentation please refer to the DDAbstractLogger implementation.
+    // The design of this method is taken from the SVAbstractLogger implementation.
+    // For extensive documentation please refer to the SVAbstractLogger implementation.
 
     // Note: The internal implementation MUST access the colorsEnabled variable directly,
     // This method is designed explicitly for external access.
@@ -549,7 +549,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block BOOL result;
 
@@ -567,13 +567,13 @@
         _deleteOnEverySave = flag;
     };
 
-    // The design of the setter logic below is taken from the DDAbstractLogger implementation.
-    // For documentation please refer to the DDAbstractLogger implementation.
+    // The design of the setter logic below is taken from the SVAbstractLogger implementation.
+    // For documentation please refer to the SVAbstractLogger implementation.
 
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -615,11 +615,11 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark DDLogger
+#pragma mark SVLogger
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)didAddLogger {
-    // If you override me be sure to invoke [super didAddLogger];
+    // If you override me be sure to invoke [super didASVLogger];
 
     [self createSuspendedSaveTimer];
 
@@ -635,7 +635,7 @@
     [self destroyDeleteTimer];
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(SVLogMessage *)logMessage {
     if ([self db_log:logMessage]) {
         BOOL firstUnsavedEntry = (++_unsavedCount == 1);
 
@@ -649,10 +649,10 @@
 }
 
 - (void)flush {
-    // This method is invoked by DDLog's flushLog method.
+    // This method is invoked by SVLog's flushLog method.
     //
     // It is called automatically when the application quits,
-    // or if the developer invokes DDLog's flushLog method prior to crashing or something.
+    // or if the developer invokes SVLog's flushLog method prior to crashing or something.
 
     [self performSaveAndSuspendSaveTimer];
 }
