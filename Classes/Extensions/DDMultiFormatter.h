@@ -20,23 +20,23 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 /**
  * This formatter can be used to chain different formatters together.
  * The log message will processed in the order of the formatters added.
  **/
 
-@interface DDMultiFormatter : NSObject <DDLogFormatter>
+@interface DDMultiFormatter : NSObject <SVLogFormatter>
 
 /**
  *  Array of chained formatters
  */
 @property (readonly) NSArray *formatters;
 
-- (void)addFormatter:(id<DDLogFormatter>)formatter;
-- (void)removeFormatter:(id<DDLogFormatter>)formatter;
+- (void)addFormatter:(id<SVLogFormatter>)formatter;
+- (void)removeFormatter:(id<SVLogFormatter>)formatter;
 - (void)removeAllFormatters;
-- (BOOL)isFormattingWithFormatter:(id<DDLogFormatter>)formatter;
+- (BOOL)isFormattingWithFormatter:(id<SVLogFormatter>)formatter;
 
 @end

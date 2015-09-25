@@ -21,7 +21,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 
 /**
@@ -61,7 +61,7 @@
  * Note: If manually creating your own background threads (via NSThread/alloc/init or NSThread/detachNeThread),
  * you can use [[NSThread currentThread] setName:(NSString *)].
  **/
-@interface DDDispatchQueueLogFormatter : NSObject <DDLogFormatter>
+@interface DDDispatchQueueLogFormatter : NSObject <SVLogFormatter>
 
 /**
  * Standard init method.
@@ -129,7 +129,7 @@
 @interface DDDispatchQueueLogFormatter (OverridableMethods)
 
 - (NSString *)stringFromDate:(NSDate *)date;
-- (NSString *)queueThreadLabelForLogMessage:(DDLogMessage *)logMessage;
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage;
+- (NSString *)queueThreadLabelForLogMessage:(SVLogMessage *)logMessage;
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage;
 
 @end

@@ -15,7 +15,7 @@
 
 #import "DDASLLogger.h"
 
-@protocol DDLogger;
+@protocol SVLogger;
 
 /**
  *  This class provides the ability to capture the ASL (Apple System Logs)
@@ -25,8 +25,8 @@
 + (void)start;
 + (void)stop;
 
-// Default log level: DDLogLevelVerbose (i.e. capture all ASL messages).
-+ (DDLogLevel)captureLevel;
-+ (void)setCaptureLevel:(DDLogLevel)level;
+// Default log level: SVLogLevelVerbose (i.e. capture all ASL messages).
++ (SVLogLevel)captureLevel;
++ (void)setCaptureLevel:(SVLogLevel)level;
 
 @end

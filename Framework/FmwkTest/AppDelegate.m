@@ -3,7 +3,7 @@
 #import <CocoaLumberjack/DDTTYLogger.h>
 
 // Log levels: off, error, warn, info, verbose
-static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+static const SVLogLevel ddLogLevel = SVLogLevelVerbose;
 
 
 @implementation AppDelegate
@@ -12,12 +12,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    [SVLog addLogger:[DDTTYLogger sharedInstance]];
     
-    DDLogVerbose(@"Verbose");
-    DDLogInfo(@"Info");
-    DDLogWarn(@"Warn");
-    DDLogError(@"Error");
+    SVLogVerbose(@"Verbose");
+    SVLogInfo(@"Info");
+    SVLogWarn(@"Warn");
+    SVLogError(@"Error");
 }
 
 @end

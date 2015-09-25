@@ -52,7 +52,7 @@
 #pragma mark Override Me
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)db_log:(DDLogMessage *)logMessage {
+- (BOOL)db_log:(SVLogMessage *)logMessage {
     // Override me and add your implementation.
     //
     // Return YES if an item was added to the buffer.
@@ -211,7 +211,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSUInteger result;
 
@@ -248,7 +248,7 @@
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -271,7 +271,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -339,7 +339,7 @@
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -362,7 +362,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -436,7 +436,7 @@
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -459,7 +459,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block NSTimeInterval result;
 
@@ -526,7 +526,7 @@
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -549,7 +549,7 @@
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block BOOL result;
 
@@ -573,7 +573,7 @@
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -615,11 +615,11 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark DDLogger
+#pragma mark SVLogger
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)didAddLogger {
-    // If you override me be sure to invoke [super didAddLogger];
+    // If you override me be sure to invoke [super didASVLogger];
 
     [self createSuspendedSaveTimer];
 
@@ -635,7 +635,7 @@
     [self destroyDeleteTimer];
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(SVLogMessage *)logMessage {
     if ([self db_log:logMessage]) {
         BOOL firstUnsavedEntry = (++_unsavedCount == 1);
 
@@ -649,10 +649,10 @@
 }
 
 - (void)flush {
-    // This method is invoked by DDLog's flushLog method.
+    // This method is invoked by SVLog's flushLog method.
     //
     // It is called automatically when the application quits,
-    // or if the developer invokes DDLog's flushLog method prior to crashing or something.
+    // or if the developer invokes SVLog's flushLog method prior to crashing or something.
 
     [self performSaveAndSuspendSaveTimer];
 }

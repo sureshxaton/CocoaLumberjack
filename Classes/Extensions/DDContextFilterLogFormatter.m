@@ -20,7 +20,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface DDLoggingContextSet : NSObject
+@interface SVLoggingContextSet : NSObject
 
 - (void)addToSet:(NSUInteger)loggingContext;
 - (void)removeFromSet:(NSUInteger)loggingContext;
@@ -36,7 +36,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface DDContextWhitelistFilterLogFormatter () {
-    DDLoggingContextSet *_contextSet;
+    SVLoggingContextSet *_contextSet;
 }
 
 @end
@@ -46,7 +46,7 @@
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _contextSet = [[DDLoggingContextSet alloc] init];
+        _contextSet = [[SVLoggingContextSet alloc] init];
     }
 
     return self;
@@ -68,7 +68,7 @@
     return [_contextSet isInSet:loggingContext];
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     if ([self isOnWhitelist:logMessage->_context]) {
         return logMessage->_message;
     } else {
@@ -83,7 +83,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface DDContextBlacklistFilterLogFormatter () {
-    DDLoggingContextSet *_contextSet;
+    SVLoggingContextSet *_contextSet;
 }
 
 @end
@@ -93,7 +93,7 @@
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _contextSet = [[DDLoggingContextSet alloc] init];
+        _contextSet = [[SVLoggingContextSet alloc] init];
     }
 
     return self;
@@ -115,7 +115,7 @@
     return [_contextSet isInSet:loggingContext];
 }
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     if ([self isOnBlacklist:logMessage->_context]) {
         return nil;
     } else {
@@ -130,7 +130,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-@interface DDLoggingContextSet () {
+@interface SVLoggingContextSet () {
     OSSpinLock _lock;
     NSMutableSet *_set;
 }
@@ -138,7 +138,7 @@
 @end
 
 
-@implementation DDLoggingContextSet
+@implementation SVLoggingContextSet
 
 - (instancetype)init {
     if ((self = [super init])) {

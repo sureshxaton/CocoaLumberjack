@@ -10,14 +10,14 @@ import UIKit
 import CocoaLumberjack
 import CocoaLumberjackSwift
 
-let ddloglevel = DDLogLevel.Verbose
+let ddloglevel = SVLogLevel.Verbose
 
 private func printSomething() {
-    DDLogVerbose("Verbose");
-    DDLogDebug("Debug");
-    DDLogInfo("Info");
-    DDLogWarn("Warn");
-    DDLogError("Error");
+    SVLogVerbose("Verbose");
+    SVLogDebug("Debug");
+    SVLogInfo("Info");
+    SVLogWarn("Warn");
+    SVLogError("Error");
 }
 
 @UIApplicationMain
@@ -28,13 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
         let formatter = Formatter()
         DDTTYLogger.sharedInstance().logFormatter = formatter
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
+        SVLog.addLogger(DDTTYLogger.sharedInstance())
         
-        DDLogVerbose("Verbose");
-        DDLogDebug("Debug");
-        DDLogInfo("Info");
-        DDLogWarn("Warn");
-        DDLogError("Error");
+        SVLogVerbose("Verbose");
+        SVLogDebug("Debug");
+        SVLogInfo("Info");
+        SVLogWarn("Warn");
+        SVLogError("Error");
         
         printSomething()
         

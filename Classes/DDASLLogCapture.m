@@ -20,7 +20,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 #include <asl.h>
 #include <notify.h>
@@ -28,7 +28,7 @@
 #include <sys/time.h>
 
 static BOOL _cancel = YES;
-static DDLogLevel _captureLevel = DDLogLevelVerbose;
+static SVLogLevel _captureLevel = SVLogLevelVerbose;
 
 #ifdef __IPHONE_8_0
     #define DDASL_IOS_PIVOT_VERSION __IPHONE_8_0
@@ -81,23 +81,23 @@ static void (*dd_asl_release)(aslresponse obj);
     _cancel = YES;
 }
 
-+ (DDLogLevel)captureLevel {
++ (SVLogLevel)captureLevel {
     return _captureLevel;
 }
 
-+ (void)setCaptureLevel:(DDLogLevel)level {
++ (void)setCaptureLevel:(SVLogLevel)level {
     _captureLevel = level;
 }
 
 #pragma mark - Private methods
 
 + (void)configureAslQuery:(aslmsg)query {
-    const char param[] = "7";  // ASL_LEVEL_DEBUG, which is everything. We'll rely on regular DDlog log level to filter
+    const char param[] = "7";  // ASL_LEVEL_DEBUG, which is everything. We'll rely on regular SVLog log level to filter
     
     asl_set_query(query, ASL_KEY_LEVEL, param, ASL_QUERY_OP_LESS_EQUAL | ASL_QUERY_OP_NUMERIC);
 
     // Don't retrieve logs from our own DDASLLogger
-    asl_set_query(query, kDDASLKeyDDLog, kDDASLDDLogValue, ASL_QUERY_OP_NOT_EQUAL);
+    asl_set_query(query, kDDASLKeySVLog, kDDASLSVLogValue, ASL_QUERY_OP_NOT_EQUAL);
     
 #if !TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
     int processId = [[NSProcessInfo processInfo] processIdentifier];
@@ -120,13 +120,13 @@ static void (*dd_asl_release)(aslresponse obj);
         // By default all NSLog's with a ASL_LEVEL_WARNING level
         case ASL_LEVEL_EMERG    :
         case ASL_LEVEL_ALERT    :
-        case ASL_LEVEL_CRIT     : flag = DDLogFlagError;    async = NO;  break;
-        case ASL_LEVEL_ERR      : flag = DDLogFlagWarning;  async = YES; break;
-        case ASL_LEVEL_WARNING  : flag = DDLogFlagInfo;     async = YES; break;
-        case ASL_LEVEL_NOTICE   : flag = DDLogFlagDebug;    async = YES; break;
+        case ASL_LEVEL_CRIT     : flag = SVLogFlagError;    async = NO;  break;
+        case ASL_LEVEL_ERR      : flag = SVLogFlagWarning;  async = YES; break;
+        case ASL_LEVEL_WARNING  : flag = SVLogFlagInfo;     async = YES; break;
+        case ASL_LEVEL_NOTICE   : flag = SVLogFlagDebug;    async = YES; break;
         case ASL_LEVEL_INFO     :
         case ASL_LEVEL_DEBUG    :
-        default                 : flag = DDLogFlagVerbose;  async = YES;  break;
+        default                 : flag = SVLogFlagVerbose;  async = YES;  break;
     }
 
     if (!(_captureLevel & flag)) {
@@ -144,7 +144,7 @@ static void (*dd_asl_release)(aslresponse obj);
 
     NSDate *timeStamp = [NSDate dateWithTimeIntervalSince1970:totalSeconds];
 
-    DDLogMessage *logMessage = [[DDLogMessage alloc]initWithMessage:message
+    SVLogMessage *logMessage = [[SVLogMessage alloc]initWithMessage:message
                                                               level:_captureLevel
                                                                flag:flag
                                                             context:0
@@ -155,7 +155,7 @@ static void (*dd_asl_release)(aslresponse obj);
                                                             options:0
                                                           timestamp:timeStamp];
     
-    [DDLog log:async message:logMessage];
+    [SVLog log:async message:logMessage];
 }
 
 + (void)captureAslLogs {

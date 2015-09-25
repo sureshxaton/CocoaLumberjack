@@ -43,7 +43,7 @@
     NSMutableArray *_formatters;
 }
 
-- (DDLogMessage *)logMessageForLine:(NSString *)line originalMessage:(DDLogMessage *)message;
+- (SVLogMessage *)logMessageForLine:(NSString *)line originalMessage:(SVLogMessage *)message;
 
 @end
 
@@ -74,12 +74,12 @@
 
 #pragma mark Processing
 
-- (NSString *)formatLogMessage:(DDLogMessage *)logMessage {
+- (NSString *)formatLogMessage:(SVLogMessage *)logMessage {
     __block NSString *line = logMessage->_message;
 
     dispatch_sync(_queue, ^{
-        for (id<DDLogFormatter> formatter in _formatters) {
-            DDLogMessage *message = [self logMessageForLine:line originalMessage:logMessage];
+        for (id<SVLogFormatter> formatter in _formatters) {
+            SVLogMessage *message = [self logMessageForLine:line originalMessage:logMessage];
             line = [formatter formatLogMessage:message];
 
             if (!line) {
@@ -91,8 +91,8 @@
     return line;
 }
 
-- (DDLogMessage *)logMessageForLine:(NSString *)line originalMessage:(DDLogMessage *)message {
-    DDLogMessage *newMessage = [message copy];
+- (SVLogMessage *)logMessageForLine:(NSString *)line originalMessage:(SVLogMessage *)message {
+    SVLogMessage *newMessage = [message copy];
 
     newMessage->_message = line;
     return newMessage;
@@ -110,13 +110,13 @@
     return formatters;
 }
 
-- (void)addFormatter:(id<DDLogFormatter>)formatter {
+- (void)addFormatter:(id<SVLogFormatter>)formatter {
     dispatch_barrier_async(_queue, ^{
         [_formatters addObject:formatter];
     });
 }
 
-- (void)removeFormatter:(id<DDLogFormatter>)formatter {
+- (void)removeFormatter:(id<SVLogFormatter>)formatter {
     dispatch_barrier_async(_queue, ^{
         [_formatters removeObject:formatter];
     });
@@ -128,7 +128,7 @@
     });
 }
 
-- (BOOL)isFormattingWithFormatter:(id<DDLogFormatter>)formatter {
+- (BOOL)isFormattingWithFormatter:(id<SVLogFormatter>)formatter {
     __block BOOL hasFormatter;
 
     dispatch_sync(_queue, ^{

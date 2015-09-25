@@ -5,11 +5,11 @@ framework module CocoaLumberjack {
 	module * { export * }
 	
 	//Until Xcode adds support for textual headers
-	//textual header "DDLogMacros.h"
+	//textual header "SVLogMacros.h"
 	//We have to use config_macros and define ddLogLevel on the command line
 	config_macros ddLogLevel
 	
-	exclude header "DDLog+LOGV.h"
+	exclude header "SVLog+LOGV.h"
 	exclude header "DDLegacyMacros.h"
 }
 

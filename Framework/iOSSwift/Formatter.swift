@@ -9,7 +9,7 @@
 import Foundation
 import CocoaLumberjack.DDDispatchQueueLogFormatter
 
-class Formatter: DDDispatchQueueLogFormatter, DDLogFormatter {
+class Formatter: DDDispatchQueueLogFormatter, SVLogFormatter {
     let threadUnsafeDateFormatter: NSDateFormatter
     
     override init() {
@@ -20,7 +20,7 @@ class Formatter: DDDispatchQueueLogFormatter, DDLogFormatter {
         super.init()
     }
     
-    override func formatLogMessage(logMessage: DDLogMessage!) -> String {
+    override func formatLogMessage(logMessage: SVLogMessage!) -> String {
         let dateAndTime = threadUnsafeDateFormatter.stringFromDate(logMessage.timestamp)
         
         var logLevel: String

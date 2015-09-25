@@ -22,7 +22,7 @@
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-// We probably shouldn't be using DDLog() statements within the DDLog implementation.
+// We probably shouldn't be using SVLog() statements within the SVLog implementation.
 // But we still want to leave our log statements for any future debugging,
 // and to allow other developers to trace the implementation (which is a great learning tool).
 //
@@ -82,7 +82,7 @@
 
 @interface DDTTYLoggerColorProfile : NSObject {
     @public
-    DDLogFlag mask;
+    SVLogFlag mask;
     NSInteger context;
 
     uint8_t fg_r;
@@ -109,7 +109,7 @@
     size_t resetCodeLen;
 }
 
-- (instancetype)initWithForegroundColor:(DDColor *)fgColor backgroundColor:(DDColor *)bgColor flag:(DDLogFlag)mask context:(NSInteger)ctxt;
+- (instancetype)initWithForegroundColor:(DDColor *)fgColor backgroundColor:(DDColor *)bgColor flag:(SVLogFlag)mask context:(NSInteger)ctxt;
 
 @end
 
@@ -886,8 +886,8 @@ static DDTTYLogger *sharedInstance;
 }
 
 - (void)loadDefaultColorProfiles {
-    [self setForegroundColor:DDMakeColor(214,  57,  30) backgroundColor:nil forFlag:DDLogFlagError];
-    [self setForegroundColor:DDMakeColor(204, 121,  32) backgroundColor:nil forFlag:DDLogFlagWarning];
+    [self setForegroundColor:DDMakeColor(214,  57,  30) backgroundColor:nil forFlag:SVLogFlagError];
+    [self setForegroundColor:DDMakeColor(204, 121,  32) backgroundColor:nil forFlag:SVLogFlagWarning];
 }
 
 - (BOOL)colorsEnabled {
@@ -904,7 +904,7 @@ static DDTTYLogger *sharedInstance;
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     __block BOOL result;
 
@@ -941,18 +941,18 @@ static DDTTYLogger *sharedInstance;
     NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
     NSAssert(![self isOnInternalLoggerQueue], @"MUST access ivar directly, NOT via self.* syntax.");
 
-    dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+    dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
 
     dispatch_async(globalLoggingQueue, ^{
         dispatch_async(self.loggerQueue, block);
     });
 }
 
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask {
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(SVLogFlag)mask {
     [self setForegroundColor:txtColor backgroundColor:bgColor forFlag:mask context:LOG_CONTEXT_ALL];
 }
 
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask context:(NSInteger)ctxt {
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(SVLogFlag)mask context:(NSInteger)ctxt {
     dispatch_block_t block = ^{
         @autoreleasepool {
             DDTTYLoggerColorProfile *newColorProfile =
@@ -987,7 +987,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1004,7 +1004,7 @@ static DDTTYLogger *sharedInstance;
             DDTTYLoggerColorProfile *newColorProfile =
                 [[DDTTYLoggerColorProfile alloc] initWithForegroundColor:txtColor
                                                          backgroundColor:bgColor
-                                                                    flag:(DDLogFlag)0
+                                                                    flag:(SVLogFlag)0
                                                                  context:0];
 
             NSLogInfo(@"DDTTYLogger: newColorProfile: %@", newColorProfile);
@@ -1019,7 +1019,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1028,11 +1028,11 @@ static DDTTYLogger *sharedInstance;
     }
 }
 
-- (void)clearColorsForFlag:(DDLogFlag)mask {
+- (void)clearColorsForFlag:(SVLogFlag)mask {
     [self clearColorsForFlag:mask context:0];
 }
 
-- (void)clearColorsForFlag:(DDLogFlag)mask context:(NSInteger)context {
+- (void)clearColorsForFlag:(SVLogFlag)mask context:(NSInteger)context {
     dispatch_block_t block = ^{
         @autoreleasepool {
             NSUInteger i = 0;
@@ -1057,7 +1057,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1081,7 +1081,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1103,7 +1103,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1125,7 +1125,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1148,7 +1148,7 @@ static DDTTYLogger *sharedInstance;
     if ([self isOnInternalLoggerQueue]) {
         block();
     } else {
-        dispatch_queue_t globalLoggingQueue = [DDLog loggingQueue];
+        dispatch_queue_t globalLoggingQueue = [SVLog loggingQueue];
         NSAssert(![self isOnGlobalLoggingQueue], @"Core architecture requirement failure");
 
         dispatch_async(globalLoggingQueue, ^{
@@ -1157,7 +1157,7 @@ static DDTTYLogger *sharedInstance;
     }
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(SVLogMessage *)logMessage {
     NSString *logMsg = logMessage->_message;
     BOOL isFormatted = NO;
 
@@ -1371,7 +1371,7 @@ static DDTTYLogger *sharedInstance;
 
 @implementation DDTTYLoggerColorProfile
 
-- (instancetype)initWithForegroundColor:(DDColor *)fgColor backgroundColor:(DDColor *)bgColor flag:(DDLogFlag)aMask context:(NSInteger)ctxt {
+- (instancetype)initWithForegroundColor:(DDColor *)fgColor backgroundColor:(DDColor *)bgColor flag:(SVLogFlag)aMask context:(NSInteger)ctxt {
     if ((self = [super init])) {
         mask = aMask;
         context = ctxt;

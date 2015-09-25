@@ -24,10 +24,10 @@ FOUNDATION_EXPORT const unsigned char CocoaLumberjackVersionString[];
 #endif
 
 // Core
-#import <CocoaLumberjack/DDLog.h>
+#import <CocoaLumberjack/SVLog.h>
 
 // Main macros
-#import <CocoaLumberjack/DDLogMacros.h>
+#import <CocoaLumberjack/SVLogMacros.h>
 #import <CocoaLumberjack/DDAssertMacros.h>
 
 // Capture ASL

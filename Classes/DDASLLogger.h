@@ -20,13 +20,13 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 // Custom key set on messages sent to ASL
-extern const char* const kDDASLKeyDDLog;
+extern const char* const kDDASLKeySVLog;
 
-// Value set for kDDASLKeyDDLog
-extern const char* const kDDASLDDLogValue;
+// Value set for kDDASLKeySVLog
+extern const char* const kDDASLSVLogValue;
 
 /**
  * This class provides a logger for the Apple System Log facility.
@@ -42,13 +42,13 @@ extern const char* const kDDASLDDLogValue;
  * you may choose to use a file logger and a tty logger.
  **/
 
-@interface DDASLLogger : DDAbstractLogger <DDLogger>
+@interface DDASLLogger : DDAbstractLogger <SVLogger>
 
 + (instancetype)sharedInstance;
 
 // Inherited from DDAbstractLogger
 
-// - (id <DDLogFormatter>)logFormatter;
-// - (void)setLogFormatter:(id <DDLogFormatter>)formatter;
+// - (id <SVLogFormatter>)logFormatter;
+// - (void)setLogFormatter:(id <SVLogFormatter>)formatter;
 
 @end
