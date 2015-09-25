@@ -18,7 +18,7 @@
     #define DD_LEGACY_MACROS 0
 #endif
 
-#import "DDLog.h"
+#import "SVLog.h"
 
 /**
  * This class provides an abstract implementation of a database logger.
@@ -28,7 +28,7 @@
  * and override the methods in the implementation file that are prefixed with "db_".
  **/
 
-@interface DDAbstractDatabaseLogger : DDAbstractLogger {
+@interface SVAbstractDatabaseLogger : SVAbstractLogger {
     
 @protected
     NSUInteger _saveThreshold;

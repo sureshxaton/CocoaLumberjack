@@ -13,32 +13,32 @@
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
 
-#import "DDASLLogger.h"
+#import "SVASLLogger.h"
 #import <asl.h>
 
 #if !__has_feature(objc_arc)
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-const char* const kDDASLKeyDDLog = "DDLog";
+const char* const kDDASLKeySVLog = "SVLog";
 
-const char* const kDDASLDDLogValue = "1";
+const char* const kDDASLSVLogValue = "1";
 
-static DDASLLogger *sharedInstance;
+static SVASLLogger *sharedInstance;
 
-@interface DDASLLogger () {
+@interface SVASLLogger () {
     aslclient _client;
 }
 
 @end
 
 
-@implementation DDASLLogger
+@implementation SVASLLogger
 
 + (instancetype)sharedInstance {
-    static dispatch_once_t DDASLLoggerOnceToken;
+    static dispatch_once_t SVASLLoggerOnceToken;
 
-    dispatch_once(&DDASLLoggerOnceToken, ^{
+    dispatch_once(&SVASLLoggerOnceToken, ^{
         sharedInstance = [[[self class] alloc] init];
     });
 
@@ -60,9 +60,9 @@ static DDASLLogger *sharedInstance;
     return self;
 }
 
-- (void)logMessage:(DDLogMessage *)logMessage {
+- (void)logMessage:(SVLogMessage *)logMessage {
     // Skip captured log messages
-    if ([logMessage->_fileName isEqualToString:@"DDASLLogCapture"]) {
+    if ([logMessage->_fileName isEqualToString:@"SVASLLogCapture"]) {
         return;
     }
 
@@ -75,11 +75,11 @@ static DDASLLogger *sharedInstance;
         switch (logMessage->_flag) {
             // Note: By default ASL will filter anything above level 5 (Notice).
             // So our mappings shouldn't go above that level.
-            case DDLogFlagError     : aslLogLevel = ASL_LEVEL_CRIT;     break;
-            case DDLogFlagWarning   : aslLogLevel = ASL_LEVEL_ERR;      break;
-            case DDLogFlagInfo      : aslLogLevel = ASL_LEVEL_WARNING;  break; // Regular NSLog's level
-            case DDLogFlagDebug     :
-            case DDLogFlagVerbose   :
+            case SVLogFlagError     : aslLogLevel = ASL_LEVEL_CRIT;     break;
+            case SVLogFlagWarning   : aslLogLevel = ASL_LEVEL_ERR;      break;
+            case SVLogFlagInfo      : aslLogLevel = ASL_LEVEL_WARNING;  break; // Regular NSLog's level
+            case SVLogFlagDebug     :
+            case SVLogFlagVerbose   :
             default                 : aslLogLevel = ASL_LEVEL_NOTICE;   break;
         }
 
@@ -105,7 +105,7 @@ static DDASLLogger *sharedInstance;
             if (asl_set(m, ASL_KEY_LEVEL, level_strings[aslLogLevel]) == 0 &&
                 asl_set(m, ASL_KEY_MSG, msg) == 0 &&
                 asl_set(m, ASL_KEY_READ_UID, readUIDString) == 0 &&
-                asl_set(m, kDDASLKeyDDLog, kDDASLDDLogValue) == 0) {
+                asl_set(m, kDDASLKeySVLog, kDDASLSVLogValue) == 0) {
                 asl_send(_client, m);
             }
             asl_free(m);

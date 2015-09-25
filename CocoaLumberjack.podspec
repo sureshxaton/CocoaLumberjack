@@ -2,12 +2,12 @@
 Pod::Spec.new do |s|
 
   s.name     = 'CocoaLumberjack'
-  s.version  = '2.0.1'
+  s.version  = '2.1.1'
   s.license  = 'BSD'
   s.summary  = 'A fast & simple, yet powerful & flexible logging framework for Mac and iOS.'
   s.homepage = 'https://github.com/CocoaLumberjack/CocoaLumberjack'
   s.author   = { 'Robbie Hanson' => 'robbiehanson@deusty.com' }
-  s.source   = { :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git',
+  s.source   = { :git => 'https://github.com/sureshxaton/CocoaLumberjack.git',
                  :tag => "#{s.version}" }
 
   s.description = 'It is similar in concept to other popular logging frameworks such as log4j, '   \
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Core' do |ss|
-    ss.source_files = 'Classes/DD*.{h,m}'
+    ss.source_files = 'Classes/SV*.{h,m}'
   end
 
   s.subspec 'Extensions' do |ss|
@@ -44,12 +44,4 @@ Pod::Spec.new do |s|
       ss.source_files = 'Classes/CLI/*.{h,m}'
       ss.dependency 'CocoaLumberjack/Default'
   end
-
-  s.subspec 'Swift' do |ss|
-      ss.ios.deployment_target = '8.0'
-      ss.osx.deployment_target = '10.10'
-      ss.source_files = 'Classes/CocoaLumberjack.swift'
-      ss.dependency 'CocoaLumberjack/Extensions'
-  end
-  
 end

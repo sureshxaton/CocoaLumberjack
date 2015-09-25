@@ -16,11 +16,11 @@
 /**
  * NSAsset replacement that will output a log message even when assertions are disabled.
  **/
-#define DDAssert(condition, frmt, ...)                                                \
+#define SVAssert(condition, frmt, ...)                                                \
         if (!(condition)) {                                                           \
             NSString *description = [NSString stringWithFormat:frmt, ## __VA_ARGS__]; \
-            DDLogError(@"%@", description);                                           \
+            SVLogError(@"%@", description);                                           \
             NSAssert(NO, description);                                                \
         }
-#define DDAssertCondition(condition) DDAssert(condition, @"Condition not satisfied: %s", #condition)
+#define SVAssertCondition(condition) SVAssert(condition, @"Condition not satisfied: %s", #condition)
 

@@ -14,7 +14,7 @@
 //   prior written permission of Deusty, LLC.
 
 /**
- * Welcome to CocoaLumberjack!
+ * Welcome to CocoaLumberjack! 
  *
  * The project page has a wealth of documentation if you have any questions.
  * https://github.com/CocoaLumberjack/CocoaLumberjack
@@ -34,7 +34,7 @@
  * Define your logging level in your implementation file:
  *
  * // Log levels: off, error, warn, info, verbose
- * static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
+ * static const SVLogLevel ddLogLevel = SVLogLevelVerbose;
  *
  * Step 2 [3rd party frameworks]:
  *
@@ -46,14 +46,14 @@
  * Define your logging level in your implementation file:
  *
  * // Log levels: off, error, warn, info, verbose
- * static const DDLogLevel myLibLogLevel = DDLogLevelVerbose;
+ * static const SVLogLevel myLibLogLevel = SVLogLevelVerbose;
  *
  * Step 3:
- * Replace your NSLog statements with DDLog statements according to the severity of the message.
+ * Replace your NSLog statements with SVLog statements according to the severity of the message.
  *
- * NSLog(@"Fatal error, no dohickey found!"); -> DDLogError(@"Fatal error, no dohickey found!");
+ * NSLog(@"Fatal error, no dohickey found!"); -> SVLogError(@"Fatal error, no dohickey found!");
  *
- * DDLog works exactly the same as NSLog.
+ * SVLog works exactly the same as NSLog.
  * This means you can pass it multiple variables just like NSLog.
  **/
 
@@ -65,17 +65,17 @@
 #endif
 
 // Core
-#import "DDLog.h"
+#import "SVLog.h"
 
 // Main macros
-#import "DDLogMacros.h"
-#import "DDAssertMacros.h"
+#import "SVLogMacros.h"
+#import "SVAssertMacros.h"
 
 // Capture ASL
-#import "DDASLLogCapture.h"
+#import "SVASLLogCapture.h"
 
 // Loggers
-#import "DDTTYLogger.h"
-#import "DDASLLogger.h"
-#import "DDFileLogger.h"
+#import "SVTTYLogger.h"
+#import "SVASLLogger.h"
+#import "SVFileLogger.h"
 
